@@ -266,19 +266,16 @@ async function main() {
         if (obj.msgType === "Report") {
             const hub_mac = obj.mac.substring(0, obj.mac.length-4);
             // adapter.log.info("mac："+hub_mac+"  currentPercentage："+obj.data.currentPosition);
-            if (openPercent === "0")
-            {
-                if (obj.data.hasOwnProperty("currentPosition"))
-                {
-                    setStates(hub_mac+'.'+obj.mac+'.currentPosition', obj.data.currentPosition.toString());
+            if (obj.data.hasOwnProperty("currentPosition")) {
+                // Standardmäßig den Wert direkt übernehmen
+                let currentPos = obj.data.currentPosition;
+                
+                // Nur wenn Invertierung aktiv ist, den Wert umrechnen
+                if (openPercent === "100") {
+                    currentPos = 100 - currentPos;
                 }
-            }
-            else if(openPercent === "100")
-            {
-                if (obj.data.hasOwnProperty("currentPosition"))
-                {
-                    setStates(hub_mac+'.'+obj.mac+'.currentPosition', (100 - obj.data.currentPosition).toString());
-                }
+                
+                setStates(hub_mac + '.' + obj.mac + '.currentPosition', currentPos.toString());
             }
             if (obj.data.hasOwnProperty("RSSI"))
             {
